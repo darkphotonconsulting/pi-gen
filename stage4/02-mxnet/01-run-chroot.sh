@@ -26,4 +26,4 @@ echo "Reload dphys-swapfile service"
 
 cd /root
 
-pip install mxnet-1.5.0-py2.py3-none-any.whl
+/usr/bin/pip3 install mxnet-1.5.0-py2.py3-none-any.whl
