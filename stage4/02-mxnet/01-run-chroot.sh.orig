@@ -1,0 +1,53 @@
+cd /root
+
+pip install mxnet-x.x.x-py2.py3-none-any.whl
+
+#echo "Updating /etc/dphys-swapfile"
+
+cat << EOF > /etc/dphys-swapfile
+# where we want the swapfile to be, this is the default
+#CONF_SWAPFILE=/var/swap
+
+# set size to absolute value, leaving empty (default) then uses computed value
+#   you most likely don't want this, unless you have an special disk situation
+CONF_SWAPSIZE=1024
+
+# set size to computed value, this times RAM size, dynamically adapts,
+#   guarantees that there is enough swap without wasting disk space on excess
+#CONF_SWAPFACTOR=2
+
+# restrict size (computed and absolute!) to maximally this limit
+#   can be set to empty for no limit, but beware of filled partitions!
+#   this is/was a (outdated?) 32bit kernel limit (in MBytes), do not overrun it
+#   but is also sensible on 64bit to prevent filling /var or even / partition
+#CONF_MAXSWAP=2048
+EOF
+
+echo "Reload dphys-swapfile service"
+/etc/init.d/dphys-swapfile stop
+/etc/init.d/dphys-swapfile start
+
+echo "Clone MXnet repository"
+git clone https://github.com/apache/incubator-mxnet.git --recursive
+cd incubator-mxnet
+builddir="$(pwd)"
+echo "Build MXnet from source"
+mkdir -p build && cd build
+    cmake \
+        -DUSE_SSE=OFF \
+        -DUSE_CUDA=OFF \
+        -DUSE_OPENCV=ON \
+        -DUSE_OPENMP=ON \
+        -DUSE_MKL_IF_AVAILABLE=OFF \
+        -DUSE_SIGNAL_HANDLER=ON \
+        -DCMAKE_BUILD_TYPE=Release \
+        -GNinja ..
+    ninja -j$(nproc)
+
+
+    
+cd $builddir && cd python 
+#pip install --upgrade pip https://stackoverflow.com/questions/49836676/error-after-upgrading-pip-cannot-import-name-main
+echo "Install MXnet Python Modules"
+pip install -e . 
+

@@ -1,0 +1,13 @@
+git 
+cmake 
+ninja-build 
+build-essential 
+g++-4.9 
+c++-4.9 
+liblapack* 
+libblas* 
+libopencv* 
+libopenblas* 
+python3-dev 
+virtualenv
+

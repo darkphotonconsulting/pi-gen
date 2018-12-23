@@ -12,3 +12,15 @@ gldriver-test
 fonts-droid-fallback
 fonts-liberation2
 obconf
+lsof
+build-essential
+python-dev
+python-pip
+python-setuptools
+python-scapy
+jq 
+tcpdump
+ssldump
+ngrep
+
+
