@@ -15,7 +15,7 @@ on_chroot << EOF
 systemctl disable hwclock.sh
 systemctl disable nfs-common
 systemctl disable rpcbind
-systemctl disable ssh
+systemctl enable ssh
 systemctl enable regenerate_ssh_host_keys
 EOF
 
@@ -37,7 +37,7 @@ for GRP in input spi i2c gpio; do
 	groupadd -f -r "$GRP"
 done
 for GRP in adm dialout cdrom audio users sudo video games plugdev input gpio spi i2c netdev; do
-  adduser pi $GRP
+  adduser mlpi $GRP
 done
 EOF
 
