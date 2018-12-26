@@ -8,8 +8,8 @@ on_chroot << EOF
 if ! id -u pi >/dev/null 2>&1; then
 	adduser --disabled-password --gecos "" mlpi
 fi
-echo "mlpi:${BPASSWORD}" | chpasswd
-echo "root:${BPASSWORD}" | chpasswd
+echo "mlpi:mlpi4321" | chpasswd
+echo "root:mlpi4321" | chpasswd
 EOF
 
 

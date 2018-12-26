@@ -24,3 +24,8 @@ man-db
 policykit-1
 ssh-import-id
 zsh
+vim
+tshark
+lsof 
+jq
+
