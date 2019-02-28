@@ -1,0 +1,6 @@
+install -m 775 files/classify.py "${ROOTFS_DIR}/home/mlpi/DevOps/classify.py"
+install -m 775 files/gluoncv_classify.py "${ROOTFS_DIR}/home/mlpi/DevOps/gluoncv_classify.py"
+install -m 644 files/classification-demo.png "${ROOTFS_DIR}/home/mlpi/DevOps/classification-demo.png"
+install -m 775 files/classify_x.py "${ROOTFS_DIR}/home/mlpi/DevOps/classify_x.py"
+install -m 775 files/inception_predict.py "${ROOTFS_DIR}/home/mlpi/DevOps/inception_predict.py"
+install -m 644 files/cvpi.sh  "${ROOTFS_DIR}/etc/profile.d/cvpi.sh"

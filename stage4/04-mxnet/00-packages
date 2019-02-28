@@ -1,0 +1,13 @@
+libatlas-base-dev libqtgui4 python3-pyqt5
+libjpeg-dev libtiff5-dev libpng-dev
+libjasper-dev
+libmp3lame-dev libtheora-dev 
+libavcodec-dev libavformat-dev libswscale-dev libv4l-dev
+libxvidcore-dev libx264-dev libxine2-dev libvorbis-dev
+libopencore-amrnb-dev libopencore-amrwb-dev
+libgphoto2-dev libeigen3-dev libhdf5-dev doxygen 
+libzmq3-dev libjemalloc-dev libopenblas-dev
+gfortran python3 python3-dev
+git cmake ninja-build build-essential g++-4.9 c++-4.9 liblapack* libblas* libopenblas*
+libgtk2.0-dev libgtk-3-dev
+pandoc vim

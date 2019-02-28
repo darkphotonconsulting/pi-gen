@@ -1,4 +1,10 @@
-# pi-gen
+# pi-gen (feature/cvpi)
+
+This is a fork of the RasPI org created image generation tool. It is heavily modified to produce a specific type of disk image, this is free for all but be aware. 
+
+- The default user is: mlpi
+- The default password is: mlpi4321
+
 
 _Tool used to create the raspberrypi.org Raspbian images_
 
@@ -202,7 +208,7 @@ maintenance and allows for more easy customization.
    enhancements, etc.  This is a base desktop system, with some development
    tools installed.
 
- - **Stage 4** - Raspbian system meant to fit on a 4GB card.  More development
+ - **Stage 4** - Computer Vision & Machine Learning tools. More development
    tools, an email client, learning tools like Scratch, specialized packages
    like sonic-pi, system documentation, office productivity, etc.  This is the
    stage that installs all of the things that make Raspbian friendly to new
@@ -213,12 +219,10 @@ maintenance and allows for more easy customization.
 
 ### Stage specification
 
-If you wish to build up to a specified stage (such as building up to stage 2
-for a lite system), place an empty file named `SKIP` in each of the `./stage`
-directories you wish not to include.
+This branch is hardwired to build stages 0-4, and export stage4 with all Computer Vision and Machine Learning tools.
 
-Then add an empty file named `SKIP_IMAGES` to `./stage4` (if building up to stage 2) or
-to `./stage2` (if building a minimal system).
+If you wish to build up to a specified stage, you should be using the official pi-gen repository and not this fork. This is specifically for building a pi system to back WOBv3.
+
 
 ```bash
 # Example for building a lite system
@@ -228,26 +232,14 @@ touch ./stage4/SKIP_IMAGES ./stage5/SKIP_IMAGES
 sudo ./build.sh  # or ./build-docker.sh
 ```
 
-If you wish to build further configurations upon (for example) the lite
-system, you can also delete the contents of `./stage3` and `./stage4` and
-replace with your own contents in the same format.
-
-
 ## Skipping stages to speed up development
 
-If you're working on a specific stage the recommended development process is as
-follows:
+ - dont, the entire build should take up to 3 hours, grab a coffee. Each stage is critical to a winning CVpi system.
+ 
+## Adding to stages for modifications 
 
- * Add a file called SKIP_IMAGES into the directories containing EXPORT_* files
-   (currently stage2, stage4 and stage5)
- * Add SKIP files to the stages you don't want to build. For example, if you're
-   basing your image on the lite image you would add these to stages 3, 4 and 5.
- * Run build.sh to build all stages
- * Add SKIP files to the earlier successfully built stages
- * Modify the last stage
- * Rebuild just the last stage using ```sudo CLEAN=1 ./build.sh```
- * Once you're happy with the image you can remove the SKIP_IMAGES files and
-   export your image to test
+ - this should be fine.
+
 
 # Troubleshooting
 

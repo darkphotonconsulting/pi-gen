@@ -1,5 +1,6 @@
 deploy/*
 work/*
+wpa_supplicant.conf
 config
 postrun.sh
 SKIP

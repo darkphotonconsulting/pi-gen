@@ -7,7 +7,6 @@ python-picamera python3-picamera
 debian-reference-en dillo
 raspberrypi-net-mods raspberrypi-ui-mods
 python-pip python3-pip
-python3-numpy
 pypy
 alacarte rc-gui sense-hat
 tree
@@ -25,3 +24,10 @@ piwiz
 rp-prefapps
 libav-tools
 vlc
+git cmake ninja-build build-essential g++-4.9 c++-4.9 liblapack* libblas* libopenblas* python3-dev virtualenv
+apt-transport-https curl git libatlas-base-dev libcurl4-openssl-dev libjemalloc-dev liblapack-dev libopenblas-dev ca-certificates cmake 
+libopencv-dev python-opencv
+libzmq3-dev ninja-build python-dev software-properties-common virtualenv wget
+libtcmalloc-minimal4
+libtbb-dev libtbb2
+uvccapture uvcdynctrl guvcview luvcview

@@ -23,3 +23,9 @@ htop
 man-db
 policykit-1
 ssh-import-id
+lsof
+tcpdump
+strace
+jq
+tshark
+zsh
