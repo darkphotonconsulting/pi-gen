@@ -6,6 +6,8 @@ This is a fork of the RasPI.org image generation tool. It is modified to produce
 
 - The default user is: mlpi
 - The default password is: mlpi4321
+- You need to add your wpa_supplicant.conf to `stage2/02-net-tweaks/files` before you execute the builder, this will allow the PI to auto-join your wifi network once the image is booted.
+- 
 
 
 ## Dependencies
@@ -262,3 +264,62 @@ To resolve this, ensure that the following files are available (install them if 
 ```
 
 You may also need to load the module by hand - run `modprobe binfmt_misc`.
+
+#AI/ML Tools Briefing
+
+
+* Classifier - This is a WIP, it allows you to fetch and load from a list of models in the model zoo and will attempt a similar routing of classification of an image from various source locations, labeling that image with classification data, and upload to S3 (if enabled). 
+
+```
+mlpi@mlpi:~/DevOps $ python classify.py --help
+usage: classify.py [-h] [--list_nets] [--snapshot] [--local] [--remote]
+                   [--camera_device CAMERA_DEVICE] [--img_file IMG_FILE]
+                   [--img_url IMG_URL] [--s3_bucket S3_BUCKET]
+                   [--enable_upload] [--zoo_network ZOO_NETWORK]
+
+ML Pi Image Classification Tool
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --list_nets           List Usable Model Zoo Networks
+  --snapshot            Run Classification Against Web Camera Input
+  --local               Run Classification Against Local File
+  --remote              Run Classification Against Remote File (URL)
+  --camera_device CAMERA_DEVICE
+                        Video 4 Linux Device Path
+  --img_file IMG_FILE   Path To Local Image File
+  --img_url IMG_URL     URL To Remote Image File
+  --s3_bucket S3_BUCKET
+                        Target AWS S3 Bucket For Uploads
+  --enable_upload       Target AWS S3 Bucket For Uploads
+  --zoo_network ZOO_NETWORK
+                        Target AWS S3 Bucket For Uploads
+```
+
+* Classifier_X - This actually only uses a pre-trained Inception despite also having the zoo_network argument (ignored) which is the best bang for buck. This is currently the primary focus and most usable and consistent classifier on box.  
+
+```bash
+mlpi@mlpi:~/DevOps $ python classify_x.py --help
+usage: classify_x.py [-h] [--list_nets] [--snapshot] [--local] [--remote]
+                     [--camera_device CAMERA_DEVICE] [--img_file IMG_FILE]
+                     [--img_url IMG_URL] [--s3_bucket S3_BUCKET]
+                     [--enable_upload] [--zoo_network ZOO_NETWORK]
+
+ML Pi Image Classification Tool
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --list_nets           List Usable Model Zoo Networks
+  --snapshot            Run Classification Against Web Camera Input
+  --local               Run Classification Against Local File
+  --remote              Run Classification Against Remote File (URL)
+  --camera_device CAMERA_DEVICE
+                        Video 4 Linux Device Path
+  --img_file IMG_FILE   Path To Local Image File
+  --img_url IMG_URL     URL To Remote Image File
+  --s3_bucket S3_BUCKET
+                        Target AWS S3 Bucket For Uploads
+  --enable_upload       Target AWS S3 Bucket For Uploads
+  --zoo_network ZOO_NETWORK
+                        Target AWS S3 Bucket For Uploads
+```
