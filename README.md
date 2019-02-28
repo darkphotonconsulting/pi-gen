@@ -1,12 +1,11 @@
-# pi-gen (feature/cvpi)
+# cvpi-gen (feature/cvpi)
 
-This is a fork of the RasPI org created image generation tool. It is heavily modified to produce a specific type of disk image, this is free for all but be aware. 
+_Tool used to create the darkphotonworks.com CVpi images_
+
+This is a fork of the RasPI.org image generation tool. It is modified to produce a modern debian stretch image with raspian modifications, as well as implements some minor customizations that make getting AI/ML based applications running faster on a freshly booted raspberry pi. Currently the image is the basis of the W.O.B. project at Dark Photon IT Consultation LLC. This is free for all but be aware. 
 
 - The default user is: mlpi
 - The default password is: mlpi4321
-
-
-_Tool used to create the raspberrypi.org Raspbian images_
 
 
 ## Dependencies
@@ -83,7 +82,7 @@ The following environment variables are supported:
 A simple example for building Raspbian:
 
 ```bash
-IMG_NAME='Raspbian'
+IMG_NAME='cvpi'
 ```
 
 
@@ -165,7 +164,7 @@ solution).
 
 ## Stage Anatomy
 
-### Raspbian Stage Overview
+### CVpi Stage Overview
 
 The build of Raspbian is divided up into several stages for logical clarity
 and modularity.  This causes some initial complexity, but it simplifies
@@ -192,7 +191,7 @@ maintenance and allows for more easy customization.
    installs some optimized memory functions, sets timezone and charmap
    defaults, installs fake-hwclock and ntp, wifi and bluetooth support,
    dphys-swapfile, and other basics for managing the hardware.  It also
-   creates necessary groups and gives the pi user access to sudo and the
+   creates necessary groups and gives the mlpi user access to sudo and the
    standard console hardware permission groups.
 
    There are a few tools that may not make a whole lot of sense here for
@@ -208,14 +207,13 @@ maintenance and allows for more easy customization.
    enhancements, etc.  This is a base desktop system, with some development
    tools installed.
 
- - **Stage 4** - Computer Vision & Machine Learning tools. More development
+ - **Stage 4** - Computer Vision & Machine Learning tools (opencv, mxnet), Video/Image/Audio libraries, FFmpeg, . More development
    tools, an email client, learning tools like Scratch, specialized packages
    like sonic-pi, system documentation, office productivity, etc.  This is the
    stage that installs all of the things that make Raspbian friendly to new
    users.
 
- - **Stage 5** - The official Raspbian Desktop image. Right now only adds
-   Mathematica.
+ - **Stage 5** - This stage is not executed in cvpi.
 
 ### Stage specification
 
