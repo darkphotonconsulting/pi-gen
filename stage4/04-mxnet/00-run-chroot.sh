@@ -24,3 +24,4 @@ chown mlpi:mlpi -R /home/mlpi
 echo "Install Additional Libraries"
 pip2 install boto3 
 pip2 install ffmpeg-python 
+pip2 install awscli
