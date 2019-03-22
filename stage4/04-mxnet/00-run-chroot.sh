@@ -1,6 +1,14 @@
 current_dir=$(pwd)
 echo "Create Development Dir"
 pushd /home/mlpi 
+
+mkdir -vp /home/mlpi/DevOps/tests/{testPristene,testOutput,testCalibration}
+mkdir -vp /home/mlpi/DevOps/CalibrationData
+mkdir -vp /home/mlpi/DevOps/dataSets
+mkdir -vp /home/mlpi/DevOps/tests
+
+echo "Add user to video group"
+usermod -a -G video mlpi 
 echo "Re-permission /home/mlpi"
 chown -vR mlpi:mlpi /home/mlpi 
 echo "Complete Dev Dir Setup"

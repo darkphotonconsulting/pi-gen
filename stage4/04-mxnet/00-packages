@@ -11,3 +11,4 @@ gfortran python3 python3-dev
 git cmake ninja-build build-essential g++-4.9 c++-4.9 liblapack* libblas* libopenblas*
 libgtk2.0-dev libgtk-3-dev
 pandoc vim
+fswebcam

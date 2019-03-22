@@ -25,6 +25,7 @@ parser.add_argument('--local', help='Run Classification Against Local File', act
 parser.add_argument('--remote', help='Run Classification Against Remote File (URL)', action='store_true', required=False, default=False)
 parser.add_argument('--camera_device', help='Video 4 Linux Device Path', action='store', required=False, default='/dev/video0')
 parser.add_argument('--img_file', help='Path To Local Image File', action='store', required=False, default='/tmp/example.jpg')
+parser.add_argument('--img_out', help='Directory to place Copies of Processed Image File', action='store', required=False, default='/tmp')
 parser.add_argument('--img_url', help='URL To Remote Image File', action='store', required=False, default='https://vetstreet-brightspot.s3.amazonaws.com/f6/df2f40a33911e087a80050568d634f/file/Egyptian-Mau-4-645mk062311.jpg')
 parser.add_argument('--s3_bucket', help='Target AWS S3 Bucket For Uploads', action='store', required=False, default='darkphotonconsultingllc-mlpi')
 parser.add_argument('--enable_upload', help='Target AWS S3 Bucket For Uploads', action='store_true', required=False, default=False)
@@ -98,32 +99,34 @@ args = parser.parse_args()
 
 
 #helper functions
-def file_name(ospath='/tmp'):
+def file_name():
   prfx = "mlpi"
   timestamp = dt.datetime.now().strftime("%b_%d_%Y_%H_%M_%S")
-  data = "{}/{}-{}.jpg".format(ospath,prfx, timestamp)
+  data = "{}-{}.jpg".format(prfx, timestamp)
   return data
 
 def fetch_image(url,ospath='/tmp'):
-  data = mx.test_utils.download(url, fname="{}/{}".format(ospath,url.split('/')[-1].split('?')[0]))
+  #data = mx.test_utils.download(url, fname="{}/{}".format(ospath,url.split('/')[-1].split('?')[0]))
+  filename = ospath + '/' + file_name()
+  data = mx.test_utils.download(url, fname="{}".format(filename))
   return data
 
 #AV functions
 def take_picture(in_file, out_file):
   try:
-    avengine.input(in_file).output(out_file, vframes=1).run(overwrite_output=True)
+    avengine.input(in_file).output(out_file, vframes=1).global_args('-loglevel','quiet').run(overwrite_output=True)
     data = out_file
     return data
   except avengine._run.Error as e:
     sys.exit("Unable To Use Input Device, Check If It Is In Use By Another Program")
 
-def label_picture(in_file, label_data):
+def label_picture(in_file, out_file, label_data):
   # label_data = "\n".join(label_data)
   newstr = str()
   for item in label_data:
-    newstr+=str("probability score: {}   || classification label: {}\n".format(item[0],item[1]))
-  out_file = in_file #overwrite
-  avengine.input(in_file).drawtext(text=newstr, x=0,y=0, escape_text=True).output(out_file).run(overwrite_output=True)
+    newstr+=str("label: {} [{}]\n".format(item[1],item[0]))
+  #out_file = in_file #overwrite
+  avengine.input(in_file).drawtext(text=newstr,box=1, boxborderw=5, boxcolor="white",fontcolor="black",bordercolor="gray",fontfile='/usr/share/fonts/truetype/piboto/PibotoLtBold.ttf', fontsize=18, fix_bounds=True, x=0,y=0, escape_text=True).output(out_file).global_args('-loglevel','quiet').run(overwrite_output=True)
   data = out_file
   return data
 
@@ -182,7 +185,7 @@ def main(a):
     print("Using Local File {}".format(img_file))
   elif a.remote:
     img_file = fetch_image(a.img_url)
-    print("Using Remote File {}".format(img_file))
+    print("Using Remote File {}".format(a.img_url))
   else:
     sys.exit("Please provide either --snapshot --local or --remote arguments")
 
@@ -193,8 +196,14 @@ def main(a):
 
 
   time.sleep(5)
+
+
+
+
+  #added outfile name to point this file to where we want
+  out_file_name = a.img_out + '/' + file_name()
   
-  img_file = label_picture(img_file, prediction_string)
+  img_file = label_picture(img_file, out_file_name, prediction_string)
   if a.enable_upload:
     if bucket_exists(bucket=a.s3_bucket):
       f = upload_file(img_file, a.s3_bucket)

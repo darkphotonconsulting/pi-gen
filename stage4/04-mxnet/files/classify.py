@@ -4,6 +4,7 @@ import argparse
 import ffmpeg as avengine
 import mxnet as mx
 import numpy as np
+import cv2
 import datetime as dt
 import boto3 as aws
 import botocore
@@ -110,7 +111,7 @@ def fetch_image(url,ospath='/tmp'):
 #AV functions
 def take_picture(in_file, out_file):
   try:
-    avengine.input(in_file).output(out_file, vframes=1).run(overwrite_output=True)
+    avengine.input(in_file).output(out_file, vframes=1).global_args('-loglevel','quiet').run(overwrite_output=True)
     data = out_file
     return data
   except avengine._run.Error as e:
@@ -119,7 +120,7 @@ def take_picture(in_file, out_file):
 def label_picture(in_file, label_data):
   label_data = "\n".join(label_data)
   out_file = in_file #overwrite
-  avengine.input(in_file).drawtext(text=label_data, x=0,y=0, escape_text=True).output(out_file).run(overwrite_output=True)
+  avengine.input(in_file).drawtext(text=label_data, x=0,y=0, escape_text=True).output(out_file).global_args('-loglevel', 'quiet').run(overwrite_output=True)
   data = out_file
   return data
 
@@ -229,41 +230,39 @@ def get_labels():
 
 
 #ML functions - prediction/feedback
+#change convert image to use cv2 instead of loading image via MX which requires a rebuild of MXnet. 
 
 def convert_image(in_file):
-  data = mx.image.imread(in_file)
-  data = mx.image.imresize(data, 224, 224)
-  data = data.transpose((2, 0, 1))
-  data = data.expand_dims(axis=0)
-  data = data.astype('float32')
+  #data = mx.image.imread(in_file)
+  #data = mx.image.imresize(data, 224, 224)
+  #data = data.transpose((2, 0, 1))
+  #data = data.expand_dims(axis=0)
+  #data = data.astype('float32')
+  data = cv2.cvtColor(cv2.imread(in_file), cv2.COLOR_BGR2RGB)
+  if data is None:
+    return None
+  data = cv2.resize(data, (224,224))
+  data = np.swapaxes(data, 0, 2)
+  data = np.swapaxes(data, 1, 2)
+  data = data[np.newaxis, :]
   return data
 
 # returns nothing currently for debugging, eventually want to build a clean string and return as `data`
 def classify_image(model, labels, img):
   data = list()
-  model.forward(Batch([img]))
-  time.sleep(3)
-  tries = 3
-  for i in range(tries):
-    try:
-      prob = model.get_outputs()[0]
-      prob = prob.asnumpy()
-      prob = np.squeeze(prob)
-      a = np.argsort(prob)[::-1]
-      #print top 5
-      for i in a[0:5]:
-        data.append( "Class: {} Probability: {}".format(labels[i], prob[i]) )
-        print('probability=%f, class=%s' %(prob[i], labels[i]))
-      return data
-    except mx.base.MXNetError as ex:
-      #print("Exception Handled")
-      #print(ex)
-      if i < tries -1:
-        continue
-      else:
-        print("No More Tries, bailing")
-        raise
-    break
+  model.forward(Batch([mx.nd.array(img)]))
+  try:
+    prob = model.get_outputs()[0]
+    prob = prob.asnumpy()
+    prob = np.squeeze(prob)
+    a = np.argsort(prob)[::-1]
+    #print top 5
+    for i in a[0:5]:
+      data.append( "Class: {} Probability: {}".format(labels[i], prob[i]) )
+      print('probability=%f, class=%s' %(prob[i], labels[i]))
+    return data
+  except mx.base.MXNetError as ex:
+    sys.exit("MXNet error, bailing")
 
 def main(a):
   #handle program flow flag ctrl parameters
